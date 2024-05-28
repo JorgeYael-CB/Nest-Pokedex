@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { PokeResponse } from './interfaces/poke.response.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Pokemon } from 'src/pokemon/entities/pokemon.entity';
+import { Model } from 'mongoose';
 
 
 
@@ -10,17 +13,30 @@ export class SeedService {
   private readonly httpAxios:AxiosInstance = axios
 
 
+  constructor(
+    @InjectModel( Pokemon.name )
+    private readonly pokemonModel: Model<Pokemon>,
+  ){}
+
+
   async executeSeed(){
-    const { data } = await this.httpAxios.get<PokeResponse>(`https://pokeapi.co/api/v2/pokemon?limit=10&offset=0`);
+    const { data } = await this.httpAxios.get<PokeResponse>(`https://pokeapi.co/api/v2/pokemon?limit=650&offset=0`);
+    const pokemonToInsert: {name:string, no:number}[] = [];
+
+    // Borramos los elementos previos
+    await this.pokemonModel.deleteMany(); // delete * from pokemon
 
     data.results.forEach( ({name, url}) => {
       const segments = url.split('/');
       const no:number = +segments[ segments.length - 2 ];
 
-      console.log({no, name});
+      pokemonToInsert.push({name, no});
     });
 
-    return data.results;
-  }
+    // Insertamos todas
+    await this.pokemonModel.insertMany(pokemonToInsert); // insert into pokemons (name, no)
+
+    return 'SEED executed';
+  };
 
 };
