@@ -8,8 +8,12 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v2');
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
+      whitelist: true, // solo acepta lo que el backend espera y lo demas lo borra
+      forbidNonWhitelisted: true, // manda un error[] en lo que no se espera
+      transform: true, // transforma los valores de los DTO al valor que espera
+      transformOptions: {
+        enableImplicitConversion: true,
+      }
     })
   )
 
