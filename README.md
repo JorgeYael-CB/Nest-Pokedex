@@ -24,6 +24,13 @@ docker-compose up -d
 localhost:3000/api/v2/seed
 ```
 
+6. renombrar el archivo .env.template a .env y agregar las variables de entorno
+```
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/example-db
+DEFAULT_LIMIT=5
+```
+
 
 ## Stack usado
 * TypeScript
