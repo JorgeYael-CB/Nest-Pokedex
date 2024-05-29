@@ -7,11 +7,14 @@ import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
+import { JoiValidationShchema } from './config/joi.validation';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [EnvConfig],
+      load: [EnvConfig], // hace converciones y mapeos
+      validationSchema: JoiValidationShchema, // trabaja en conjunto con load
     }), // leer .env - tiene que ir primero para leerlas
 
     ServeStaticModule.forRoot({
