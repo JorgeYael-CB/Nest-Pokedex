@@ -81,9 +81,6 @@ export class PokemonService {
 
 
   async remove(id: string) {
-    if( !isValidObjectId(id) )
-      throw new BadRequestException(`id is not valid.`);
-
     const pokemon = await this.pokemonModel.findByIdAndDelete( id );
     if( !pokemon )
       throw new BadRequestException(`Pokemon with id: ${id} not found.`);
